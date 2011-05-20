@@ -33,21 +33,21 @@
  ***************************************************************************/
 
 include ('../include/config.inc.php');
-if($submit)
+if(isset($_POST['submit']))
 {
-	if($playerID)
+	if(isset($_POST['playerID']))
 	{
-		$delete = "DELETE FROM players WHERE playerID = $playerID";
-        $delete2 = "DELETE FROM batting WHERE playerID = $playerID";
-        $delete3 = "DELETE FROM pitching WHERE playerID = $playerID";
-		$delete4 = "DELETE FROM playersinseason WHERE playerID = $playerID";
+		$delete = "DELETE FROM players WHERE playerID = ".$_POST['playerID']."";
+        $delete2 = "DELETE FROM batting WHERE playerID = ".$_POST['playerID']."";
+        $delete3 = "DELETE FROM pitching WHERE playerID = ".$_POST['playerID']."";
+		$delete4 = "DELETE FROM playersinseason WHERE playerID = ".$_POST['playerID']."";
         $result = mysql_query($delete);
         $result = mysql_query($delete2);
         $result = mysql_query($delete3);
 		$result = mysql_query($delete4);
         echo "Thank You, That information has been entered.<br>\n
               If you are not re-directed to the Admin page in 3 seconds
-              <a href=index.php?seasonID=$seasonID>Click Here</a>";
+              <a href=index.php?seasonID=1>Click Here</a>";
         echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php\">";
 	}
 	else
@@ -57,18 +57,18 @@ if($submit)
 }
 elseif($removeexisting)
 {
-	if($playerID)
+	if(isset($_POST['playerID']))
 	{
-		$delete = "DELETE FROM playersinseason WHERE (playerID = $playerID AND seasonID = $seasonID)";
-        $delete2 = "DELETE FROM batting WHERE (playerID = $playerID AND seasonID = $seasonID)";
-        $delete3 = "DELETE FROM pitching WHERE (playerID = $playerID AND seasonID = $seasonID)";
+		$delete = "DELETE FROM playersinseason WHERE (playerID = $playerID AND seasonID = ".$_POST['seasonID'].")";
+        $delete2 = "DELETE FROM batting WHERE (playerID = $playerID AND seasonID = ".$_POST['seasonID'].")";
+        $delete3 = "DELETE FROM pitching WHERE (playerID = $playerID AND seasonID = ".$_POST['seasonID'].")";
         $result = mysql_query($delete);
         $result = mysql_query($delete2);
         $result = mysql_query($delete3);
         echo "Thank You, That information has been entered.<br>\n
               If you are not re-directed to the Admin page in 3 seconds
-              <a href=index.php?seasonID=$seasonID>Click Here</a>";
-        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=$seasonID\">";
+              <a href=index.php?seasonID=".$_POST['seasonID'].">Click Here</a>";
+        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=".$_POST['seasonID']."\">";
 	}
 	else
 	{

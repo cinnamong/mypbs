@@ -33,11 +33,11 @@
  ***************************************************************************/
 
 include('../include/config.inc.php');
-if($submit)
+if(isset($_POST['submit']))
 {
-	if($name)
+	if(isset($_POST['name']))
 	{
-		$insert = "INSERT INTO season (name) VALUES ('$name')";
+		$insert = "INSERT INTO season VALUES ('','".$_POST['name']."')";
 		$result = mysql_query($insert);
 		echo "Thank You, That information has been entered.<br>\n
 		If you are not re-directed to the Admin page in 3 seconds
@@ -51,7 +51,7 @@ if($submit)
 }
 else
 {
-	echo $PHP_SELF;
+	echo $_SERVER['PHP_SELF'];
 }
 
 

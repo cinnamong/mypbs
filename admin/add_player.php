@@ -41,8 +41,8 @@ if(isset($_POST['addnew']))
         $result = mysql_query($insert);
         echo "Thank You, That information has been entered.<br>\n
               If you are not re-directed to the Admin page in 3 seconds
-              <a href=index.php?seasonID=".$_POST['seasonID'].">Click Here</a>";
-        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=$seasonID\">";
+              <a href=index.php?seasonID=1>Click Here</a>";
+        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=1 \">";
 
 	}
 	else
@@ -54,12 +54,12 @@ elseif(isset($_POST['addexisting']))
 {
 	if(isset($_POST['playerID']))
 	{
-		$insert = "INSERT INTO playersinseason (playerID, seasonID) VALUES ('$playerID','$seasonID')";
+		$insert = "INSERT INTO playersinseason (playerID, seasonID) VALUES ('".$_POST['playerID']."','".$_POST['seasonID']."')";
 		$result = mysql_query($insert);
 		echo "Thank You, That information has been entered.<br>\n
               If you are not re-directed to the Admin page in 3 seconds
-              <a href=index.php?seasonID=$seasonID>Click Here</a>";
-        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=$seasonID\">";
+              <a href=index.php?seasonID=".$_POST['seasonID'].">Click Here</a>";
+        echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=".$_POST['seasonID']."\">";
 	}
 	else
 	{
