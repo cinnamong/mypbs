@@ -1,0 +1,34 @@
+Installation Instructions
+
+Create a database
+1. Create a mysql database
+2. Use the mypbs.sql file to create the database tables
+
+Download and configure files
+1. Download mypbs10.zip
+2. Extract all files to directory of choice
+3. Open include/config.inc.php and edit required fields
+4. Upload all files to your webserver directory that will hold your stats files
+   i.e - http://www.yoursite.com/stats
+
+Using MyPBS
+1. In order to update stats for your team, open your browser and browse to the admin folder
+   i.e - http://www.yoursite.com/stats/admin
+2. First create a season
+3. Once a season is added, you will see a link with the season name.  Click on the link and you will
+   see more options that are pretty self explanitory.
+
+   Note: adding players just adds names to the players table in the database. In order to associate a player
+   with a season, just click on the season and use the "add player to this season" option.  This is done
+   so that players can be added and removed from seasons easily.
+
+Security Note
+   The current release of MyPBS does not have a protected admin section.  You need to use htaccess or
+   whatever your prefer to protect the admin folder.
+
+
+
+For support visit http://mypbs.haysproductions.com
+
+Good luck,
+FredEH

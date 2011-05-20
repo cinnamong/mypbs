@@ -1,0 +1,77 @@
+/* Default typeface */
+A, B, P, TABLE, SMALL, BODY, TD, OL, UL, MENU, BLOCKQUOTE, DIV {
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+PRE, TT {
+    font-family: Courier, fixed;
+}
+
+body{
+	background: $bgcolor;
+}
+
+/* Link appearance */
+A:link, A:visited { 
+   text-decoration: none;
+   color: #000066;
+}
+
+A:active {
+  color: #CCCCCC;
+}
+
+A:hover { 
+   color: #0099FF;
+   text-decoration: underline;
+}
+
+/* Form elements */
+input,textarea, select {
+	color : #000000;
+	font: normal 11px Verdana, Arial, Helvetica, sans-serif;
+	border-color : #000000;
+}
+
+/* The text input fields background colour */
+input.post, textarea.post, select {
+	background-color : #FFFFFF;
+}
+
+input { text-indent : 2px; }
+
+/* The buttons used for bbCode styling in message post */
+input.button {
+	background-color : #EFEFEF;
+	color : #000000;
+	font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* The main submit button option */
+input.mainoption {
+	background-color : #FAFAFA;
+	font-weight : bold;
+}
+
+/* None-bold submit button */
+input.liteoption {
+	background-color : #FAFAFA;
+	font-weight : normal;
+}
+
+/* Style for action titles */
+td.actiontitle {
+	background-color: #333399;
+	color: #FCFCFC;
+	font-weight : bold;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+/* Import the fancy styles for IE only (NS4.x doesn't use the @import function) */
+@import url("formIE.css");
+
+
+

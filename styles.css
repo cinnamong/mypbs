@@ -1,0 +1,44 @@
+/* Default typeface */
+A, B, P, TABLE, SMALL, BODY, TD, OL, UL, MENU, BLOCKQUOTE, DIV {
+    font-family: Arial, Helvetica, sans-serif;
+}
+PRE, TT, INPUT, TEXTAREA {font-family: Courier, fixed;}
+body{background: #ffffff;}
+
+/* Link appearance */
+A:link, A:visited { 
+   text-decoration: none;
+   font-family: Arial, Helvetica, sans-serif;;
+}
+A:hover { text-decoration: underline;}
+A:link {color: #0033CC;}
+A:visited {color: #0033CC;}
+A:hover { color: #FF9933;}
+A:active {color: #FF9933;}
+
+/* table appearance */
+
+table {border-collapse: collapse;}
+tr.stats{font-size: 11px;}
+tr.heading{
+	font-weight: bold;
+	font-size: 11px;
+	color: #ffffff;
+	background-color: #003399;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.hlinks{
+	color: #ffffff;
+}
+
+table.key{
+	font-size: 10px;
+	background-color: #f3f3f3;	
+}
+
+td.seasonreg{font-size: 10px; background: #ffffff;}
+td.seasonhover{font-size: 10px; background: #F5F5F5;}
+
+td.namereg{background: #ffffff;}
+td.namehover{background: #F5F5F5;}
