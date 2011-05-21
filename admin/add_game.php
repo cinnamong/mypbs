@@ -38,7 +38,7 @@ if(isset($_POST['submit']))
 	if($team && $dd && $mm && $yyyy)
 	{
 		$date = $yyyy . $mm . $dd;
-        $insert = "INSERT INTO games (seasonID, date, team) VALUES ('".$_POST['seasonID']."','$date','$team')";
+        $insert = "INSERT INTO games (seasonID, date, team) VALUES ('".$_POST['seasonID']."','".$date."','$team')";
        	$result = mysql_query($insert);
         echo "Thank You, That information has been entered.<br>\nIf you are not re-directed to the Admin page in 3 seconds <a href=index.php?seasonID=".$_POST['seasonID'].">Click Here</a>";
 		echo "<META HTTP-EQUIV=Refresh CONTENT=\"3; URL=index.php?seasonID=".$_POST['seasonID']."\">";

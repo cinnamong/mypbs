@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 /***************************************************************************
  *                            admin/index.php
- *                            ------------------- 
+ *                            -------------------
  *   copyright            : (C) 2003 Fred Hays & Jared Riddle
  *   email                : fred@haysproductions.com & jared@breadwinner.org
  *	 support			  : http://mypbs.sourceforge.net/forum
@@ -12,30 +12,29 @@
 
 /***************************************************************************
  *
- *	This program is free software; you can redistribute it and/or 
- *	modify it under the terms of the GNU General Public License as 
- *	published by the Free Software Foundation; either version 2 of 
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License as
+ *	published by the Free Software Foundation; either version 2 of
  *	the License, or (at your option) any later version.
  *
- *	This program is distributed in the hope that it will be useful, 
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *	General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License 
- *	along with this program; if not, write to the Free Software 
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *	MyPBS comes with ABSOLUTELY NO WARRANTY; for details see LICENSE. 
- *	This is free software, and you are welcome to redistribute it under 
+ *	MyPBS comes with ABSOLUTELY NO WARRANTY; for details see LICENSE.
+ *	This is free software, and you are welcome to redistribute it under
  *	certain conditions; see LICENSE for details.
  *
  ***************************************************************************/
 
-include('../include/functions.inc.php');
-include('../include/config.inc.php');
+include ('../include/functions.inc.php');
+include ('../include/config.inc.php');
 require '../include/libs/Smarty.class.php';
-
 ?>
 
 <html>
@@ -59,15 +58,15 @@ if(isset($_POST['$seasonID']))
 	?>
 	<table align="center" cellpadding="5">
   		<tr>
-			<td bgcolor="#F4F4F4" colspan="2" align="center"><font size=4><?php echo $seasonName['name']."\n\n";?></font><br><font size=1><a href="<?php echo $_SERVER['PHP_SELF'];?>">back to season selection</a></font><br></td>
+			<td bgcolor="#F4F4F4" colspan="2" align="center"><font size=4><?php echo $seasonName['name'] . "\n\n";?></font><br><font size=1><a href="<?php echo $_SERVER['PHP_SELF'];?>">back to season selection</a></font><br></td>
 		</tr>
 	
 	<?php
-	if($playerID && !$gameID)
+	if(isset($_POST['playerID']) && empty($_POST['gameID']))
 	{
 		$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = ".$_POST['seasonID']."",$db);
 		$gameRow = mysql_fetch_array($gameArray);
-		$playerArray = mysql_query("SELECT * FROM players WHERE playerID = $playerID",$db);
+		$playerArray = mysql_query("SELECT * FROM players WHERE playerID = ".$_POST['playerID']."",$db);
 		$playerRow = mysql_fetch_array($playerArray);
 		$seasonplayersArray = mysql_query("SELECT playerID FROM playersinseason WHERE seasonID = ".$_POST['seasonID']."",$db);
 		$seasonplayersRow = mysql_fetch_array($seasonplayersArray);?>
@@ -76,7 +75,7 @@ if(isset($_POST['$seasonID']))
 		<table>
 			<tr>
 				<td bgcolor="#F4F4F4" align="center"><b><?php echo "$playerRow[first] $playerRow[last]";?></b><br />
-				<font size=1><a href="<?php echo"$PHP_SELF?seasonID=".$_POST['seasonID']."";?>">back to player selection</a></font></td>
+				<font size=1><a href="<?php echo $_SERVER['PHP_SELF'] . "?seasonID=" . $_POST['seasonID'] . "";?>">back to player selection</a></font></td>
 			</tr>
 			<tr>
 				<td>
@@ -85,11 +84,10 @@ if(isset($_POST['$seasonID']))
 							<td>Team</td><td>Date</td>
 						</tr>
 					<?php
-					do
-					{
-						echo "<tr><td><font size=2><a href=$PHP_SELF?seasonID=".$_POST['seasonID']."&playerID=$playerID&gameID=$gameRow[gameID]>$gameRow[team]</a></td> <td>$gameRow[date]</font></td></tr>";
-						
-					}while($gameRow = mysql_fetch_array($gameArray));
+					do {
+						echo "<tr><td><font size=2><a href=" . $_SERVER['PHP_SELF'] . "?seasonID=" . $_POST['seasonID'] . "&playerID=" . $_POST['playerID'] . "&gameID=" . $gameRow['gameID'] . ">" . $gameRow['team'] . "</a></td> <td>" . $gameRow['date'] . "</font></td></tr>";
+
+					} while($gameRow = mysql_fetch_array($gameArray));
 					?>
 					</table>
 				</td>
@@ -100,21 +98,22 @@ if(isset($_POST['$seasonID']))
 	
 	<?php
 	}
-	elseif($gameID)
-	{?>
+	elseif(isset($_POST['gameID']))
+	{
+?>
 
 		<?php
-		$playerArray = mysql_query("SELECT * FROM players WHERE playerID = $playerID",$db);
+		$playerArray = mysql_query("SELECT * FROM players WHERE playerID = $playerID", $db);
 		$playerRow = mysql_fetch_array($playerArray);
-		$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE games.gameID = $gameID",$db);
+		$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE games.gameID = $gameID", $db);
 		$gameRow = mysql_fetch_array($gameArray);
-		$seasonplayersArray = mysql_query("SELECT playerID FROM playersinseason WHERE seasonID = ".$_POST['seasonID']."",$db);
+		$seasonplayersArray = mysql_query("SELECT playerID FROM playersinseason WHERE seasonID = " . $_POST['seasonID'] . "", $db);
 		$seasonplayersRow = mysql_fetch_array($seasonplayersArray);
 
-		$battingArray = mysql_query("SELECT * FROM batting WHERE (batting.playerID=$playerID AND batting.seasonID=".$_POST['seasonID']." AND batting.gameID=$gameID)");
+		$battingArray = mysql_query("SELECT * FROM batting WHERE (batting.playerID=$playerID AND batting.seasonID=" . $_POST['seasonID'] . " AND batting.gameID=$gameID)");
 		$battingRow = mysql_fetch_array($battingArray);
 
-		$pitchingArray = mysql_query("SELECT * FROM pitching WHERE (pitching.playerID=$playerID AND pitching.seasonID=".$_POST['seasonID']." AND pitching.gameID=$gameID)");
+		$pitchingArray = mysql_query("SELECT * FROM pitching WHERE (pitching.playerID=$playerID AND pitching.seasonID=" . $_POST['seasonID'] . " AND pitching.gameID=$gameID)");
 		$pitchingRow = mysql_fetch_array($pitchingArray);
 
 		$bid = $battingRow["id"];
@@ -126,17 +125,16 @@ if(isset($_POST['$seasonID']))
 			<table>
 				<tr>
 					<td bgcolor="#F4F4F4" align="center"><b><?php echo "$playerRow[first] $playerRow[last]";?></b><br />
-					<font size=1><a href="<?php echo "$PHP_SELF?seasonID=".$_POST['seasonID']."";?>">back to player selection</a></font><br></td>
+					<font size=1><a href="<?php echo "$PHP_SELF?seasonID=" . $_POST['seasonID'] . "";?>">back to player selection</a></font><br></td>
 				</tr>
 				<tr>
-					<td bgcolor="#F4F4F4" align="center"><?php echo "<b>$gameRow[team]&nbsp;&nbsp;&nbsp;$gameRow[date]</b>";?><br /><font size=1><a href="<?php echo"$PHP_SELF?seasonID=$seasonID&playerID=$playerID";?>">back to game selection</a></font></td>
+					<td bgcolor="#F4F4F4" align="center"><?php echo "<b>$gameRow[team]&nbsp;&nbsp;&nbsp;$gameRow[date]</b>";?><br /><font size=1><a href="<?php echo "$PHP_SELF?seasonID=$seasonID&playerID=$playerID";?>">back to game selection</a></font></td>
 				</tr>
 				<tr>
 				<td>
 		
 		<?php
-		if($bid)
-		{
+		if($bid) {
 			$pa = $battingRow[pa];
 			$bbb = $battingRow[bb];
 			$bsol = $battingRow[sol];
@@ -152,8 +150,7 @@ if(isset($_POST['$seasonID']))
 			$obe = $battingRow[obe];
 			$steals = $battingRow[steals];
 		}
-		if($pid)
-		{
+		if($pid) {
 			$win = $pitchingRow[win];
 			$loss = $pitchingRow[loss];
 			$save = $pitchingRow[save];
@@ -172,21 +169,14 @@ if(isset($_POST['$seasonID']))
 			$shut = $pitchingRow[shut];
 		}
 
+		$btablearray = array("Plate Appearances:", "Walks:", "Strike Out Looking:", "Strike Out Swinging:", "Runs:", "Singles", "Doubles", "Triples", "Home Runs", "RBIs", "Sacrifice", "Hit By Pitch", "On By Error", "Steals");
+		$btablenamearray = array("pa", "bbb", "bsol", "bsos", "bruns", "single", "double", "triple", "bhr", "rbi", "sac", "bhbp", "obe", "steals");
+		$btablestatsarray = array($pa, $bbb, $bsol, $bsos, $bruns, $single, $double, $triple, $bhr, $rbi, $sac, $bhbp, $obe, $steals);
 
-		$btablearray = array(
-						"Plate Appearances:","Walks:","Strike Out Looking:","Strike Out Swinging:","Runs:","Singles","Doubles",
-						"Triples","Home Runs","RBIs","Sacrifice","Hit By Pitch","On By Error","Steals"
-						);
-		$btablenamearray = array("pa","bbb","bsol","bsos","bruns","single","double","triple","bhr","rbi","sac","bhbp","obe","steals");
-		$btablestatsarray = array($pa,$bbb,$bsol,$bsos,$bruns,$single,$double,$triple,$bhr,$rbi,$sac,$bhbp,$obe,$steals);
+		$ptablearray = array("Win:", "Loss:", "Save:", "No Decision:", "Innings Pitched:", "Runs Scored:", "Earned Runs:", "Walks:", "Strike Out Looking:", "Strike Out Swinging:", "# Of Batters Faced:", "Hits:", "Home Runs:", "Games Started:", "Hit By Pitch:", "Shut Out");
+		$ptablenamearray = array("win", "loss", "save", "nd", "ip", "pruns", "er", "pbb", "psol", "psos", "batters", "hits", "phr", "gs", "phbp", "shut");
+		$ptablestatsarray = array($win, $loss, $save, $nd, $ip, $pruns, $er, $pbb, $psol, $psos, $batters, $hits, $phr, $gs, $phbp, $shut);
 
-		$ptablearray = array(
-						"Win:","Loss:","Save:","No Decision:","Innings Pitched:","Runs Scored:","Earned Runs:",
-						"Walks:","Strike Out Looking:","Strike Out Swinging:","# Of Batters Faced:","Hits:","Home Runs:","Games Started:","Hit By Pitch:","Shut Out"
-						);
-		$ptablenamearray = array("win","loss","save","nd","ip","pruns","er","pbb","psol","psos","batters","hits","phr","gs","phbp","shut");
-		$ptablestatsarray = array($win,$loss,$save,$nd,$ip,$pruns,$er,$pbb,$psol,$psos,$batters,$hits,$phr,$gs,$phbp,$shut);
-		
 		//batting table
 		?>
 			<table>
@@ -194,14 +184,13 @@ if(isset($_POST['$seasonID']))
 			<td valign="top">
 
 			<table cellpadding=2>
-			<form method="post" action="<?php echo"submit_batting.php?seasonID=".$_POST['seasonID']."&playerID=$playerID&gameID=$gameID&bid=$bid";?>">
+			<form method="post" action="<?php echo "submit_batting.php?seasonID=" . $_POST['seasonID'] . "&playerID=" . $_POST['playerID'] . "&gameID=" . $_POST['gameID'] . "&bid=" . $bid;?>">
 			<tr>
 				<td class="actiontitle" align="center" colspan="2"><b>Batting</b></td>
 			<tr>
 			</tr>
 		<?php
-		for ($i = 0; $i < 14 ; $i++)
-		{
+		for($i = 0; $i < 14; $i++) {
 			echo "<tr><td>$btablearray[$i]</td><td><input type=text size=4  name=$btablenamearray[$i] value=$btablestatsarray[$i]></td></tr>";
 		}
 		?>
@@ -216,7 +205,7 @@ if(isset($_POST['$seasonID']))
 		//pitching table
 		?>
 			<td valign="top">
-			<form method="post" action="<?php echo "submit_pitching.php?seasonID=".$_POST['seasonID']."&playerID=$playerID&gameID=$gameID&pid=$pid";?>">
+			<form method="post" action="<?php echo "submit_pitching.php?seasonID=" . $_POST['seasonID'] . "&playerID=$playerID&gameID=$gameID&pid=$pid";?>">
 			<table cellpadding=2>
 			<tr>
 				<td class="actiontitle" align="center" colspan="2"><b>Pitching</b></td>
@@ -224,8 +213,7 @@ if(isset($_POST['$seasonID']))
 			</tr>
 
 		<?php
-		for ($i = 0; $i < 16 ; $i++)
-		{
+		for($i = 0; $i < 16; $i++) {
 			echo "<tr><td>$ptablearray[$i]</td><td><input type=text size=4  name=$ptablenamearray[$i] value=$ptablestatsarray[$i]></td></tr>";
 		}
 		?>
@@ -238,12 +226,13 @@ if(isset($_POST['$seasonID']))
 			</td>
 			</tr>
 			</table>
-	<?php	
-  	}
-	else
-	{
-		$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = ".$_POST['seasonID']."",$db);
-		$gameRow = mysql_fetch_array($gameArray); ?>
+	<?php
+				}
+				else
+				{
+				$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = ".$_POST['seasonID']."",$db);
+				$gameRow = mysql_fetch_array($gameArray);
+ ?>
 
 		<tr>
 			<td valign="top" rowspan=5>
@@ -259,46 +248,39 @@ if(isset($_POST['$seasonID']))
 							<tr>
 								<td valign="top">
 									<?php
-									$seasonplayersArray = mysql_query("SELECT * FROM playersinseason WHERE seasonID = ".$_POST['seasonID']."",$db);
+									$seasonplayersArray = mysql_query("SELECT * FROM playersinseason WHERE seasonID = " . $_POST['seasonID'] . "", $db);
 									$seasonplayersRow = mysql_fetch_array($seasonplayersArray);
-									
+
 									//load playerIDs from season players table into a 1-dimensional array
 									$sarray = array();
-									$i=0;
-									do
-									{
+									$i = 0;
+									do {
 										$sarray[$i] = $seasonplayersRow[playerID];
 										$i++;
-									}while($seasonplayersRow = mysql_fetch_array($seasonplayersArray));
-									
-									$seasonplayersArray = mysql_query("SELECT * FROM playersinseason WHERE seasonID = ".$_POST['seasonID']."",$db);
+									} while($seasonplayersRow = mysql_fetch_array($seasonplayersArray));
+
+									$seasonplayersArray = mysql_query("SELECT * FROM playersinseason WHERE seasonID = " . $_POST['seasonID'] . "", $db);
 									$seasonplayersRow = mysql_fetch_array($seasonplayersArray);
-									$linecount=0;
-									if(!$seasonplayersRow)
-									{
+									$linecount = 0;
+									if(!$seasonplayersRow) {
 										echo "<font color=red>No players found</font><br />Please associate a player with this season";
-									}
-									else
-									{	
-										do
-										{
-											$playerArray = mysql_query("SELECT * FROM players",$db);
+									} else {
+										do {
+											$playerArray = mysql_query("SELECT * FROM players", $db);
 											$playerRow = mysql_fetch_array($playerArray);
-											do
-											{
-												if($playerRow[playerID] == $seasonplayersRow[playerID])
-												{
-													echo "<font size=2><a href=$PHP_SELF?seasonID=".$_POST['seasonID']."&playerID=$playerRow[playerID]>$playerRow[first] $playerRow[last]</font></a><br />";
+											do {
+												if($playerRow[playerID] == $seasonplayersRow[playerID]) {
+													echo "<font size=2><a href=$PHP_SELF?seasonID=" . $_POST['seasonID'] . "&playerID=$playerRow[playerID]>$playerRow[first] $playerRow[last]</font></a><br />";
 													$linecount++;
 												}
-												if($linecount > 5)
-												{
+												if($linecount > 5) {
 													echo "</td><td valign=\"top\">";
-													$linecount=0;
+													$linecount = 0;
 												}
-											}while($playerRow = mysql_fetch_array($playerArray));
-										}while($seasonplayersRow = mysql_fetch_array($seasonplayersArray));
-									}?>
+											} while($playerRow = mysql_fetch_array($playerArray));
+										} while($seasonplayersRow = mysql_fetch_array($seasonplayersArray));
+									}
+								?>
 								</td>
 							</tr>
 							</table>
@@ -315,26 +297,22 @@ if(isset($_POST['$seasonID']))
 					<td valign="top">
 					<table width="100%" border="0">
 					<?php
-					$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = $seasonID ORDER BY date",$db);
+					$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = $seasonID ORDER BY date", $db);
 					$gameRow = mysql_fetch_array($gameArray);
-					$linecount=0;
-					if(!$gameRow)
-					{
+					$linecount = 0;
+					if(!$gameRow) {
 						echo "<font color=red>No games found</font><br />Please add a game to this season";
-					}
-					else
-					{
-						do
-						{
+					} else {
+						do {
 							echo "<tr><td align=\"right\">&nbsp;&nbsp;$gameRow[team]&nbsp;&nbsp;&nbsp;</td><td align=\"right\">$gameRow[date]&nbsp;&nbsp;</td></tr>";
 							$linecount++;
-							if($linecount > 10)
-							{
-								echo"</table></td><td valign=\"top\"><table width=\"100%\" border=\"0\">";
-								$linecount=0;
+							if($linecount > 10) {
+								echo "</table></td><td valign=\"top\"><table width=\"100%\" border=\"0\">";
+								$linecount = 0;
 							}
-						}while($gameRow = mysql_fetch_array($gameArray));
-					}?>
+						} while($gameRow = mysql_fetch_array($gameArray));
+					}
+				?>
 					
 					</tr></td></table>
 				</table>
@@ -343,7 +321,7 @@ if(isset($_POST['$seasonID']))
 
 		</table>
 		</td>
-			<form method=post action="<?php echo"add_player.php?seasonID=$seasonID";?>">
+			<form method=post action="<?php echo "add_player.php?seasonID=".$_POST['seasonID']."";?>">
 			<td valign="top">
 				<table border="1" cellpadding="5">
 					<tr>
@@ -360,19 +338,17 @@ if(isset($_POST['$seasonID']))
 						<td class="actiontitle" colspan="2" align="center"><b>Associate a player with this season</b></td>
 					</tr>
 					<tr>
-						<form method=post action="<?php echo"add_player.php?seasonID=".$_POST['seasonID']."";?>"> 
+						<form method=post action="<?php echo "add_player.php?seasonID=" . $_POST['seasonID'] . "";?>"> 
 						<td><select name="playerID">
 							<option value=''>--Select Player--</option>
 							<?php
-							$playerArray = mysql_query("SELECT * FROM players",$db);
+							$playerArray = mysql_query("SELECT * FROM players", $db);
 							$playerRow = mysql_fetch_array($playerArray);
-							do
-							{
-								if(!in_array($playerRow[playerID], $sarray))
-								{
-								echo "<option value=\"$playerRow[playerID]\">$playerRow[first] $playerRow[last]</option>";
+							do {
+								if(!in_array($playerRow[playerID], $sarray)) {
+									echo "<option value=\"$playerRow[playerID]\">$playerRow[first] $playerRow[last]</option>";
 								}
-							}while($playerRow = mysql_fetch_array($playerArray));
+							} while($playerRow = mysql_fetch_array($playerArray));
 							?>
 							</select>
 						</td>
@@ -381,7 +357,7 @@ if(isset($_POST['$seasonID']))
 					</tr>
 
 					<tr>
-						<form method=post action="<?php echo"add_game.php?seasonID=".$_POST['seasonID']."";?>">
+						<form method=post action="<?php echo "add_game.php?seasonID=" . $_POST['seasonID'] . "";?>">
 						<td class="actiontitle" colspan="2" align="center"><b>Add a new game to this season</b></td>
 					</tr>
 					<tr>
@@ -392,7 +368,7 @@ if(isset($_POST['$seasonID']))
 					</tr>
 
 					<tr>
-						<form method=post action="<?php echo"delete_player.php?seasonID=".$_POST['seasonID']."";?>"> 
+						<form method=post action="<?php echo "delete_player.php?seasonID=" . $_POST['seasonID'] . "";?>"> 
 						<td class="actiontitle" colspan="2" align="center"><b>Remove a player from this season</b></td>
 					</tr>
 					<tr>
@@ -400,22 +376,21 @@ if(isset($_POST['$seasonID']))
 							<select name="playerID">
 							<option value=''>--Select Player--</option>
 								<?php
-								$playerArray = mysql_query("SELECT * FROM players",$db);
+								$playerArray = mysql_query("SELECT * FROM players", $db);
 								$playerRow = mysql_fetch_array($playerArray);
-								do
-								{
-									if(in_array($playerRow[playerID], $sarray))
-									{
+								do {
+									if(in_array($playerRow[playerID], $sarray)) {
 										echo "\n<option value=\"$playerRow[playerID]\">$playerRow[first] $playerRow[last]</option>";
 									}
-								}while($playerRow = mysql_fetch_array($playerArray));?>
+								} while($playerRow = mysql_fetch_array($playerArray));
+							?>
 							</select>
 						</td>
 						<td align="center"><input type="submit"  name="removeexisting" value="submit"></td>
 						</form>
 					</tr>
 					<tr>
-						<form method=post action="<?php echo"delete_game.php?seasonID=".$_POST['seasonID']."&playerID=$playerID";?>"> 
+						<form method=post action="<?php echo "delete_game.php?seasonID=" . $_POST['seasonID'] . "&playerID=".$_POST['playerID']."";?>"> 
 						<td class="actiontitle" colspan="2" align="center"><b>Delete a game and stats</b></td>
 					</tr>
 					<tr>
@@ -423,12 +398,12 @@ if(isset($_POST['$seasonID']))
 							<select name="gameID">
 							<option value=''>--Select Game--</option>
 								<?php
-								$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = ".$_POST['seasonID']."",$db);
-								$gameRow = mysql_fetch_array($gameArray); 
-								do
-								{
+								$gameArray = mysql_query("SELECT gameID, DATE_FORMAT(date, '%m/%d/%y') AS date, team FROM games WHERE seasonID = " . $_POST['seasonID'] . "", $db);
+								$gameRow = mysql_fetch_array($gameArray);
+								do {
 									echo "\n<option value=\"$gameRow[gameID]\">$gameRow[team] $gameRow[date]</option>";
-								}while($gameRow = mysql_fetch_array($gameArray)); ?>
+								} while($gameRow = mysql_fetch_array($gameArray));
+ ?>
 							</select>
 						</td>
 						<td align="center"><input type="submit"  name="submit" value="submit"></td>
@@ -443,12 +418,13 @@ if(isset($_POST['$seasonID']))
 		
 		<?php
 
-	}
-}
-else
-{
-	$seasonArray = mysql_query("select * from season",$db);
-	$seasonRow = mysql_fetch_array($seasonArray); ?>
+		}
+		}
+		else
+		{
+		$seasonArray = mysql_query("select * from season",$db);
+		$seasonRow = mysql_fetch_array($seasonArray);
+ ?>
 
 	<table align="center" border="1" cellpadding="5" cellspacing="0">
 	<tr>
@@ -457,9 +433,10 @@ else
 	<tr>
 		<td align="center" colspan="3" valign="top">+
 			<?php
-			do{
-				echo "<a href=".$_SERVER['PHP_SELF']."?seasonID=$seasonRow[seasonID]>&nbsp;$seasonRow[name]</a>&nbsp;&nbsp;+";
-			}while($seasonRow = mysql_fetch_array($seasonArray));?>
+			do {
+				echo "<a href=" . $_SERVER['PHP_SELF'] . "?seasonID=".$seasonRow['seasonID'].">&nbsp;".$seasonRow['name']."</a>&nbsp;&nbsp;+";
+			} while($seasonRow = mysql_fetch_array($seasonArray));
+		?>
 		</td>
 	</tr>
 
@@ -474,7 +451,7 @@ else
 	</tr>
 
 	<tr>
-		<form method="post" action="add_player.php?seasonID=<?php echo $_POST['seasonID']; ?>">
+		<form method="post" action="add_player.php?seasonID=<?php echo $_POST['seasonID'];?>">
 			<td class="actiontitle">Add a new player</td>
 			<td align="right">First Name:&nbsp;<input type=text size=15  name="first"><br />
 				Last Name:&nbsp;<input type=text size=15  name="last"></td>
@@ -490,11 +467,11 @@ else
 			<select name="seasonID">
 			<option value=''>--Select Season--</option>
 			<?php
-			$seasonArray = mysql_query("SELECT * FROM season",$db);
+			$seasonArray = mysql_query("SELECT * FROM season", $db);
 			$seasonRow = mysql_fetch_array($seasonArray);
-			do{
- 				echo "\n<option value=\"".$seasonRow['seasonID']."\" name=\"".$seasonRow['seasonID']."\">".$seasonRow['name']."</option>";
-			}while($seasonRow = mysql_fetch_array($seasonArray));
+			do {
+				echo "\n<option value=\"" . $seasonRow['seasonID'] . "\" name=\"" . $seasonRow['seasonID'] . "\">" . $seasonRow['name'] . "</option>";
+			} while($seasonRow = mysql_fetch_array($seasonArray));
 			?>
 			</select>
 		</td>
@@ -509,12 +486,12 @@ else
 		<td align="right">
 			<select name="playerID">";
 			<option value=''>--Select Player---</option>
-			<?php	
-			$playerArray = mysql_query("SELECT * FROM players",$db);
-			$playerRow = mysql_fetch_array($playerArray);
-			do{
- 				echo "\n<option value=\"$playerRow[playerID]\">$playerRow[first] $playerRow[last]</option>";
-			}while($playerRow = mysql_fetch_array($playerArray));
+			<?php
+				$playerArray = mysql_query("SELECT * FROM players", $db);
+				$playerRow = mysql_fetch_array($playerArray);
+				do {
+					echo "\n<option value=\"$playerRow[playerID]\">$playerRow[first] $playerRow[last]</option>";
+				} while($playerRow = mysql_fetch_array($playerArray));
 			?>
 			</select>
 		</td>

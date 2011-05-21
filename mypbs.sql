@@ -2,9 +2,9 @@
 -- version 3.3.9
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: May 20, 2011 at 09:53 AM
--- Server version: 5.5.8
+-- Host: localhost:3306
+-- Generation Time: May 20, 2011 at 05:45 PM
+-- Server version: 5.1.36
 -- PHP Version: 5.2.11
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -25,7 +25,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `batting`
 --
 
-DROP TABLE IF EXISTS `batting`;
 CREATE TABLE IF NOT EXISTS `batting` (
   `id` mediumint(5) NOT NULL AUTO_INCREMENT,
   `playerID` mediumint(5) DEFAULT NULL,
@@ -47,12 +46,15 @@ CREATE TABLE IF NOT EXISTS `batting` (
   `steals` tinyint(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `batting`
 --
 
+INSERT INTO `batting` (`id`, `playerID`, `gameID`, `seasonID`, `pa`, `bb`, `sol`, `sos`, `runs`, `1b`, `2b`, `3b`, `hr`, `rbi`, `sac`, `hbp`, `obe`, `steals`) VALUES
+(1, 13, 2, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 14, 2, 1, 100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -60,7 +62,6 @@ CREATE TABLE IF NOT EXISTS `batting` (
 -- Table structure for table `games`
 --
 
-DROP TABLE IF EXISTS `games`;
 CREATE TABLE IF NOT EXISTS `games` (
   `gameID` mediumint(5) NOT NULL AUTO_INCREMENT,
   `seasonID` mediumint(5) DEFAULT NULL,
@@ -68,14 +69,14 @@ CREATE TABLE IF NOT EXISTS `games` (
   `team` varchar(25) CHARACTER SET utf8 COLLATE utf8_estonian_ci DEFAULT NULL,
   PRIMARY KEY (`gameID`),
   UNIQUE KEY `gameID` (`gameID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `games`
 --
 
 INSERT INTO `games` (`gameID`, `seasonID`, `date`, `team`) VALUES
-(1, 1, '2011-05-14', 'FOTOBY');
+(2, 1, '2011-05-14', 'FOTOBY');
 
 -- --------------------------------------------------------
 
@@ -83,7 +84,6 @@ INSERT INTO `games` (`gameID`, `seasonID`, `date`, `team`) VALUES
 -- Table structure for table `pitching`
 --
 
-DROP TABLE IF EXISTS `pitching`;
 CREATE TABLE IF NOT EXISTS `pitching` (
   `id` mediumint(5) NOT NULL AUTO_INCREMENT,
   `playerID` mediumint(5) DEFAULT NULL,
@@ -120,14 +120,13 @@ CREATE TABLE IF NOT EXISTS `pitching` (
 -- Table structure for table `players`
 --
 
-DROP TABLE IF EXISTS `players`;
 CREATE TABLE IF NOT EXISTS `players` (
   `playerID` mediumint(5) NOT NULL AUTO_INCREMENT,
   `last` varchar(25) DEFAULT NULL,
   `first` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`playerID`),
   UNIQUE KEY `playerID` (`playerID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `players`
@@ -147,7 +146,8 @@ INSERT INTO `players` (`playerID`, `last`, `first`) VALUES
 (21, 'ì¼ì„­', 'ì´'),
 (22, 'ë…¸ì•„', 'ë°•'),
 (23, 'ìží›ˆ', 'êµ¬'),
-(24, 'í˜„ë•', 'ë¬¸');
+(24, 'í˜„ë•', 'ë¬¸'),
+(25, 'HODONG', 'KWAK');
 
 -- --------------------------------------------------------
 
@@ -155,7 +155,6 @@ INSERT INTO `players` (`playerID`, `last`, `first`) VALUES
 -- Table structure for table `playersinseason`
 --
 
-DROP TABLE IF EXISTS `playersinseason`;
 CREATE TABLE IF NOT EXISTS `playersinseason` (
   `playerID` mediumint(5) NOT NULL DEFAULT '0',
   `seasonID` mediumint(5) NOT NULL DEFAULT '0',
@@ -167,6 +166,9 @@ CREATE TABLE IF NOT EXISTS `playersinseason` (
 -- Dumping data for table `playersinseason`
 --
 
+INSERT INTO `playersinseason` (`playerID`, `seasonID`) VALUES
+(13, 1),
+(14, 1);
 
 -- --------------------------------------------------------
 
@@ -174,13 +176,12 @@ CREATE TABLE IF NOT EXISTS `playersinseason` (
 -- Table structure for table `season`
 --
 
-DROP TABLE IF EXISTS `season`;
 CREATE TABLE IF NOT EXISTS `season` (
   `seasonID` mediumint(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(40) CHARACTER SET utf8 COLLATE utf8_estonian_ci DEFAULT NULL,
   PRIMARY KEY (`seasonID`),
   UNIQUE KEY `seasonID` (`seasonID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `season`

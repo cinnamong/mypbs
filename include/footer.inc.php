@@ -32,7 +32,7 @@
  *
  ***************************************************************************/
 
-if ($showkey == 1)
+if ($showkey == 0)
 {
 	echo "<br><br><br>
 	<table width=\"75%\" cellpadding=\"1\" class=\"key\" align=\"center\">
@@ -69,7 +69,7 @@ if ($showkey == 1)
 <br>
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr align="center">
-		<td><font size="1">Copyright &#169; 2003 <a href="http://mypbs.sourceforge.net">MyPBS</a></font></td>
+		<td><font size="1">Copyright &#169; <?php echo date("Y"); ?> <a href="eznetsol.net">EZnet Solutions</a></font></td>
 	</tr>
 </table>
 </html>

@@ -38,6 +38,7 @@ include("include/header.inc.php");
 $tpl = new Smarty;
 
 /* If a player name is clicked, we want to display the player totals */
+echo "playerID is ".$_POST['playerID'];
 
 if(isset($_POST['playerID']))
 {
@@ -63,7 +64,7 @@ if(isset($_POST['playerID']))
 	do
 	{
 		$new_season_array[$i] = $seasonRow['name'];
-		$season_link_array[$i] = $PHP_SELF.'?seasonID='.$seasonRow['seasonID'].'&playerID='.$playerID;
+		$season_link_array[$i] = $_SERVER['PHP_SELF'].'?seasonID='.$seasonRow['seasonID'].'&playerID='.$_POST['playerID'];
 		$career_link = $_SERVER['PHP_SELF'].'?playerID='.$_POST['playerID'];
 		$i++;
 	}while($seasonRow = mysql_fetch_array($seasonArray));
@@ -75,8 +76,8 @@ if(isset($_POST['playerID']))
 		$seasonID = $_POST['seasonID'];	
 		$b_sql = "SELECT sum(pa),sum(sos),sum(bb),sum(sol),sum(runs),sum(1b),sum(2b),sum(3b),sum(hr),sum(rbi),sum(sac),sum(hbp),sum(obe),sum(steals) FROM batting WHERE playerID=$playerID AND batting.seasonID = $seasonID";
 		$p_sql = "SELECT sum(win),sum(loss),sum(save),sum(nd),sum(ip),sum(runs),sum(er),sum(bb),sum(sol),sum(sos),sum(batters),sum(hits),sum(hr),sum(gs),sum(hbp),sum(shut) FROM pitching WHERE (playerID=".$_POST['playerID']." AND pitching.seasonID = ".$_POST['seasonID'].")";
-		$b_result = mysql_query("SELECT games.*, DATE_FORMAT(date, '%m/%d/%y') AS date,batting.* FROM games, batting WHERE (batting.playerID = $playerID AND games.gameID = batting.gameID AND batting.seasonID = ".$_POST['seasonID']." AND games.seasonID = ".$_POST['seasonID'].")",$db);
-		$p_result = mysql_query("SELECT games.*, DATE_FORMAT(date, '%m/%d/%y') AS date, pitching.* FROM games, pitching WHERE (pitching.playerID = $playerID AND games.gameID = pitching.gameID AND pitching.seasonID = ".$_POST['seasonID']." AND games.seasonID = ".$_POST['seasonID'].")",$db);
+		$b_result = mysql_query("SELECT games.*, DATE_FORMAT(date, '%m/%d/%y') AS date,batting.* FROM games, batting WHERE (batting.playerID = ".$_POST['playerID']." AND games.gameID = batting.gameID AND batting.seasonID = ".$_POST['seasonID']." AND games.seasonID = ".$_POST['seasonID'].")",$db);
+		$p_result = mysql_query("SELECT games.*, DATE_FORMAT(date, '%m/%d/%y') AS date, pitching.* FROM games, pitching WHERE (pitching.playerID = ".$_POST['playerID']." AND games.gameID = pitching.gameID AND pitching.seasonID = ".$_POST['seasonID']." AND games.seasonID = ".$_POST['seasonID'].")",$db);
 		$b_sums = mysql_query($b_sql);
 		$p_sums = mysql_query($p_sql);
 		$b_teamRow = mysql_fetch_array($b_sums);
@@ -163,7 +164,7 @@ else
 
 /* If we are not viewing player stats, we want to display team career totals. */
 
-if(!empty($_POST['playerID']))
+if(empty($_POST['playerID']))
 {
 	$b_stats_array = array();
 	$i=0;
@@ -171,7 +172,7 @@ if(!empty($_POST['playerID']))
 	{
 		$namesResult = mysql_query("SELECT first, last FROM players WHERE playerID = ".$myrow['playerID']."",$db);
 		$nameRow = mysql_fetch_array($namesResult);
-		if($seasonID)
+		if(isset($_post['seasonID']))
 		{
 			$sql = "SELECT sum(pa),sum(bb),sum(sol),sum(sos),sum(runs),sum(1b),sum(2b),sum(3b),sum(hr),sum(rbi),sum(sac),sum(hbp),sum(obe),     sum(steals) FROM batting WHERE playerID = $myrow[playerID] AND seasonID = ".$_PHP['seasonID']."";
 		}
@@ -204,7 +205,7 @@ if(!empty($_POST['playerID']))
 				"obp" => "",
 				"avg" => "",
 				"slg" => "",
-				"link" => $PHP_SELF.'?playerID='.$myrow['playerID']
+				"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow['playerID']
 				);
 			$stats['obp'] = calc_obp($stats['ab'],$stats['bb'],$stats['hp'],$stats['sac'],$stats['hits']);
 			$stats['avg'] = calc_avg($stats['ab'],$stats['hits']);
@@ -220,7 +221,7 @@ if(!empty($_POST['playerID']))
 	{
 		$namesResult = mysql_query("SELECT last,first FROM players WHERE playerID = $myrow[playerID]",$db);
 		$nameRow = mysql_fetch_array($namesResult);
-		if(isset($_PHP['seasonID']))
+		if(isset($_POST['seasonID']))
 		{
 			$sql = "SELECT sum(win), sum(loss),sum(save), sum(nd),sum(ip),sum(runs),sum(er),sum(bb), sum(sol), sum(sos),sum(batters), sum(hits), sum(hr), sum(gs),sum(hbp),sum(shut) FROM pitching WHERE (playerID = $myrow[playerID] AND seasonID = $seasonID)";
 		}
@@ -293,7 +294,7 @@ else
 			"obp" => "",
 			"avg" => "",
 			"slg" => "",
-			"link" => $PHP_SELF.'?playerID='.$myrow['playerID']
+			"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow['playerID']
 		);
 		$stats['obp'] = calc_obp($stats['ab'],$stats['bb'],$stats['hp'],$stats['sac'],$stats['hits']);
 		$stats['avg'] = calc_avg($stats['ab'],$stats['hits']);
@@ -310,29 +311,29 @@ else
 	while ($myrow = mysql_fetch_array($p_result))
 	{
 		$p_stats = array(
-			"first" => $myrow[date],
-			"last" => $myrow[team],
-			"bb" => $myrow[bb],
-			"runs" => $myrow[runs],
-			"er" => $myrow[er],
-			"gs" => $myrow[gs],
-			"hr" => $myrow[hr],
-			"sos" => $myrow[sos],
-			"sol" => $myrow[sol],
-			"hp" => $myrow[hbp],
-			"win" => $myrow[win],
-			"loss" => $myrow[loss],
-			"save" => $myrow[save],
-			"nd" => $myrow[nd],
-			"games" => $myrow[win]+$myrow[loss]+$myrow[nd]+$myrow[save],
-			"ip" => number_format($myrow[ip],2),
-			"hits" => $myrow[hits],
-			"shut" => $myrow[shut],
-			"so" => $myrow[sos] + $myrow[sol],
+			"first" => $myrow['date'],
+			"last" => $myrow['team'],
+			"bb" => $myrow['bb'],
+			"runs" => $myrow['runs'],
+			"er" => $myrow['er'],
+			"gs" => $myrow['gs'],
+			"hr" => $myrow['hr'],
+			"sos" => $myrow['sos'],
+			"sol" => $myrow['sol'],
+			"hp" => $myrow['hbp'],
+			"win" => $myrow['win'],
+			"loss" => $myrow['loss'],
+			"save" => $myrow['save'],
+			"nd" => $myrow['nd'],
+			"games" => $myrow['win']+$myrow['loss']+$myrow['nd']+$myrow['save'],
+			"ip" => number_format($myrow['ip'],2),
+			"hits" => $myrow['hits'],
+			"shut" => $myrow['shut'],
+			"so" => $myrow['sos'] + $myrow['sol'],
 			"kpergame" => "",
 			"wpergame" => "",
 			"era" => "",
-			"link" => $PHP_SELF.'?playerID='.$myrow[playerID]
+			"link" => $PHP_SELF.'?playerID='.$myrow['playerID']
 		);
 		$p_stats['kpergame'] = calc_kpergame($p_stats['games'],$p_stats['so']);
 		$p_stats['wpergame'] = calc_wpergame($p_stats['games'],$p_stats['bb']);
@@ -367,7 +368,7 @@ $stats = array(
 		"obp" => "",
 		"avg" => "",
 		"slg" => "",
-		"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow[playerID]
+		"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow['playerID']
 	);
 $stats['obp'] = calc_obp($stats['ab'],$stats['bb'],$stats['hp'],$stats['sac'],$stats['hits']);
 $stats['avg'] = calc_avg($stats['ab'],$stats['hits']);
@@ -402,7 +403,7 @@ $p_stats = array(
 	"kpergame" => "",     
 	"wpergame" => "",        
 	"era" => "",
-	"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow[playerID]
+	"link" => $_SERVER['PHP_SELF'].'?playerID='.$myrow['playerID']
 );
 $p_stats['kpergame'] = calc_kpergame($p_stats['games'],$p_stats['so']);
 $p_stats['wpergame'] = calc_wpergame($p_stats['games'],$p_stats['bb']);
@@ -412,7 +413,7 @@ $p_totals[0] = $p_stats;
 
 /* This little section is how we make the column links that sort the stats */
 
-if($bcolumnlink)
+if(isset($bcolumnlink))
 {
 	$b_stats_array = array_csort($b_stats_array, "$bcolumnlink");
 }
@@ -420,7 +421,7 @@ else
 {
 	$b_stats_array = array_csort($b_stats_array, "$bsort");
 }
-if($pcolumnlink)
+if(isset($pcolumnlink))
 {
 	$p_stats_array = array_csort($p_stats_array, "$pcolumnlink");
 }

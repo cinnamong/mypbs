@@ -33,7 +33,12 @@
  ***************************************************************************/
 
 ?>
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+   <HEAD>
+   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <TITLE>THMC 야구단 STATS</TITLE>
+   </HEAD>
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr align="center">
 		<td>Team Stats for <?php echo "$teamname" ?></td>
